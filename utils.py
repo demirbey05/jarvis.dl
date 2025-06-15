@@ -104,7 +104,7 @@ class Module(nn.Module, HyperParameters):  #@save
             x = self.trainer.epoch + 1
             n = self.trainer.num_val_batches / \
                 self.plot_valid_per_epoch
-        self.board.draw(x, value.to(d2l.cpu()).detach().numpy(),
+        self.board.draw(x, value.detach().numpy(),
                         ('train_' if train else 'val_') + key,
                         every_n=int(n))
 
