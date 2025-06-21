@@ -1,5 +1,6 @@
 import inspect
 import collections
+import IPython
 from matplotlib import pyplot as plt
 from matplotlib_inline import backend_inline
 from IPython import display
@@ -303,3 +304,26 @@ def extract_zip(zip_path, extract_to=None, remove_zip=False):
             import shutil
             shutil.rmtree(extract_to, ignore_errors=True)
         raise Exception(f"Failed to extract {zip_path}: {str(e)}")
+
+
+
+
+def show_attention_heatmaps(matrices,xlabel, ylabel, titles=None, figsize=(2.5, 2.5),cmap='Reds'):
+
+    use_svg_display()
+    row_numbers,col_numbers,_,_ = matrices.shape # matrices shape must be (row_numbers,col_numbers,keys,queries)
+    fig,axes = plt.subplots(row_numbers,col_numbers,figsize=figsize, sharex=True, sharey=True, squeeze=False)
+
+    for i,(row_axes,row_matrices) in enumerate(zip(axes,matrices)):
+        for j, (ax,mat) in enumerate(zip(row_axes,row_matrices)):
+            pcm = ax.imshow(mat.detach().numpy(), cmap=cmap)
+            if i==row_numbers-1:
+                ax.set_xlabel(xlabel)
+            if j==0:
+                ax.set_ylabel(ylabel)
+            if titles is not None:
+                ax.set_title(titles[j])
+    fig.colorbar(pcm, ax=axes, shrink=0.6)        
+                
+            
+    
